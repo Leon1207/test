@@ -1,0 +1,70 @@
+#include<iostream>
+#include<cstdio>
+#include<cstring>
+using namespace std;
+char head[100];
+char map[8][1<<8];
+char code[1000];
+int stare[10]={0};
+
+int gethead(){
+	gets(head);
+	int n=0;
+	for(int i=0;i<8;i++)
+		for(int j=0;j<(1<<(i+1))-1;j++)
+			map[i][j]=head[n++];
+}
+
+int decode(int *stare,int n){
+	long long be_de=0;
+	int de=0,p=0;
+	for(int i=0;i<n;i++) be_de=be_de*10+stare[i];
+	while(be_de!=0){
+		de+=(be_de%10)<<p;
+		be_de/=10;
+		p++;
+	}
+	return de;
+}	
+
+int readcode(int start,int n){
+	memset(stare,0,sizeof(stare));
+	for(int i=0;i<n;i++)
+		stare[i]=code[start++]-'0';
+	return decode(stare,n);
+}
+	
+int main(){
+    gethead();
+    gets(code);
+    int start=0;
+    int len=0,value=0;
+    char ch;
+    while(1){
+    	len=readcode(start,3);
+    	if(len==0) break;
+    	start+=3;
+    	while(1){
+    		value=readcode(start,len);
+    		start+=len;
+    		if(value==(1<<len)-1) break;
+    		ch=map[len-1][value];
+    		cout<<ch;
+    	}
+    }
+    
+	return 0;
+} 
+
+
+
+小例子：
+HELOWRD !
+00101010000101101101101100011101010110110011110100111011010100111000
+
+解码过程：
+H
+E L O
+W R D _ !
+001 0 1。010 00 01 01 10 11。011 011 000 111。010 10 11。011 001 111。010 01 11。011 010 100 111。000
+       H              E   L   L    O                  _    W                    O                 R                     L                   D     ！
